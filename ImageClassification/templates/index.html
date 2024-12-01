@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrity Image Classification</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload an Image to Classify</h1>
+
+        <!-- Image Upload Form -->
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }} <!-- Renders the form fields -->
+            <button type="submit">Upload Image</button>
+        </form>
+
+        {% if prediction %}
+            <!-- Display the prediction -->
+            <h2>Prediction:</h2>
+            <p>Predicted Celebrity: <strong>{{ prediction }}</strong></p>
+
+            <!-- Display the uploaded image -->
+            <h3>Uploaded Image:</h3>
+            <img src="{{ uploaded_image_url }}" alt="Uploaded Image" style="max-width: 300px;">
+
+            <!-- Display probabilities in a table -->
+            <h3>Prediction Probabilities:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Celebrities</th>
+                        <th>Probability (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prob in formatted_probs %}
+                        <tr>
+                            <td>{{ prob.celebrity }}</td>
+                            <td>{{ prob.probability }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Celebrity Image Classification Project</p>
+    </footer>
+</body>
+</html>
